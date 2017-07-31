@@ -1,0 +1,220 @@
+配合hover鼠标移动到文字上显示隐藏overhidden
+	div.test{
+	white-space:nowrap; 
+	width:12em; 
+	overflow:hidden; 
+	border:1px solid #000000;
+	}
+	div.test:hover
+	{
+	text-overflow:inherit;
+	overflow:visible;
+	}
+
+
+
+设置文本超出宽度后省略号显示（！！！必须三条一起用）
+	white-space:nowrap;      超出后不换行     
+	overflow:hidden;	 超出的内容隐藏
+	text-overflow: ellipsis; 显示省略号
+
+
+
+都说了是css3     想要兼容ie8  ie-css3.htc试试这个家伙
+Internet Explorer 6 - 8 支持children属性，但是可能会错误地包含注释 Comment 节点。
+
+//任意字符倒序输出
+var str=(prompt("请输入任意字符"));
+var arr=new Array();
+//var str="abcdefg";
+for (var i =0;i<=str.length;i++) {
+	arr.push(str[i]); //先将字符串里面的字符一一取出，放入到数组中
+};
+alert((arr.reverse()).join("")); //利用数组的函数reverse将数值倒序输出
+
+
+
+
+
+移动端手机键盘出来以后，页面定位到底部的问题
+
+function fixedWatch(el) {
+  if(document.activeElement.nodeName == 'INPUT'){
+  	var h = $(window).height();
+  	el.css('position' ,'static');
+  	$('.bt_bar').hide();
+  	document.getElementsByTagName('BODY')[0].scrollTop = document.documentElement.scrollHeight;
+  } else {
+    el.css('position' ,'fixed');
+  	$('.bt_bar').show();
+  }
+};
+
+setInterval(function () {
+  fixedWatch($('.footer'));
+}, 30);
+
+
+
+
+①添加事件方法
+addHandler：function(element,type,handler){
+ if(element.addEventListener){//检测是否为DOM2级方法
+  element.addEventListener(type, handler, false);
+ }else if (element.attachEvent){//检测是否为IE级方法
+  element.attachEvent("on" + type, handler);
+ } else {//检测是否为DOM0级方法
+  element["on" + type] = handler;
+ }
+}
+②移除之前添加的事件方法
+
+removeHandler：function(element, type, handler){
+  if (element.removeEventListener){
+   element.removeEventListener(type, handler, false);
+  } else if (element.detachEvent){
+   element.detachEvent("on" + type, handler);
+  } else {
+   element["on" + type] = null;
+  }
+ }
+③获取事件及事件对象目标
+
+//获取事件对象的兼容性写法
+ getEvent: function(event){
+  return event ? event : window.event;
+ },
+ //获取事件对象目标的兼容性写法
+ getTarget: function(event){
+  return event.target || event.srcElement;
+ }
+④阻止浏览器默认事件的兼容性写法
+preventDefault: function(event){
+  if (event.preventDefault){
+   event.preventDefault();
+  } else {
+   event.returnValue = false;
+  }
+ }
+⑤阻止事件冒泡的兼容性写法
+
+stopPropagation: function(event){
+  if (event.stopPropagation){
+   event.stopPropagation();
+  } else {
+   event.cancelBubble = true;
+  }
+ }
+
+
+
+
+优先级的问题
+    从高到低
+    
+    () 括号
+    一元运算符 ++ -- !
+    算数运算符 先*/%  后+ -
+    比較运算符  > < >= <=
+    相等运算符  == != === !==
+    逻辑运算符  先&&  再||
+    三元运算符  表达式?式子:式子;
+    赋值运算符  =  += -= *= /= %=
+    逗号运算符  表示多个操作并列
+    
+    短路操作：
+    逻辑运算符：当操作数不是bool值时，会触发短路操作
+    1 从左往右看
+    2 如果不是bool值，隐式转换为bool值
+    3 哪个操作数可以决定式子的结果，就返回这个源操作数
+
+
+
+去除文本元素标签产生间隙的5种方式：
+
+1.元素浮动
+2.定位
+3.margin设负值
+4.两个标签之间不要换行或有空格
+5.给父元素设置font-size：0；
+
+
+5315527251113584151361552234567
+
+gdaggsjsgaaadgkfagadhaggssdfghj
+
+
+对于IE浏览器实现半透明的方法有两种
+1、alpha滤镜
+这是以前经常使用的方法，利用ie独有的透明滤镜来实现。
+<!--[if IE]>
+<style type="text/css">
+.t{
+    background:#f00;
+    filter:alpha(opacity=50);
+    zoom:1
+}
+.t *{
+    position:relative
+}
+</style>
+<![endif]-->
+但是使作这种方法有一个要注间的地方就是，如果这个容器直接包含文本就没法实现文本不透明，必须加一层容器在外围。
+2、渐变效果滤镜
+<!--[if IE]>
+<style type="text/css">
+.t{
+    background:transparent;
+    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#80FF0000,endColorstr=#80FF0000);
+    zoom:1;
+}
+</style>
+<![endif]-->
+注：filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#[[alpha:00~FF][red:00~FF][green:00~FF][blue:00~FF]], endColorstr=#[[alpha:00~FF][red:00~FF][green:00~FF][blue:00~FF]];
+00表示完全透明，FF就是全不透明，转换成十进制的范围就是0~255，如果想实现50%的透明需要进行一下换算，50/100 * 255 = 127.5，按128来算，转换成16进制为80。
+
+
+
+获取地址栏参数的函数  解决中文乱码
+
+//console.log(window.location.href);
+
+function getUrlParam(key) {
+    // 获取参数
+    var url = window.location.search;
+    // 正则筛选地址栏
+    var reg = new RegExp("(^|&)" + key + "=([^&]*)(&|$)");
+    // 匹配目标参数
+    var result = url.substr(1).match(reg);
+    //返回参数值
+    return result ? decodeURIComponent(result[2]) : null;
+}
+
+
+cookie的封装函数
+
+//设置cookie
+ function setCookie(name, value, day) {
+ var oDate = new Date();
+ oDate.setDate(oDate.getDate() + day);
+ document.cookie = name + '=' + value + ';expires=' + oDate;
+ }
+ //删除cookie
+ function delCookie(name) {
+ setCookie(name, 1, -1);
+ }
+ 
+ //获取cookie
+ function getCookie(name) {
+ var arr = document.cookie.split('; ');
+ for(var i = 0; i < arr.length; i++) {
+ var arrName = arr[i].split('=');
+ if(arrName[0] == name) {
+ return arrName[1];
+ }
+ }
+ return '';
+ }
+
+
+

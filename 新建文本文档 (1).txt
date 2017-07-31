@@ -1,0 +1,296 @@
+
+10、生成从0到指定值的数字数组
+
+var numbersArray = [] , max = 100;
+for( var i=1; numbersArray.push(i++) < max;); // numbers = [1,2,3 … 100]
+
+11、生成随机的字母数字字符串
+
+function generateRandomAlphaNum(len) {
+var rdmString = “”;
+for( ; rdmString.length < len; rdmString += Math.random().toString(36).substr(2));
+return rdmString.substr(0, len);
+}
+
+
+
+
+
+首先我们在做题目之前复习一下之前  任意值转换bool值为false的6情况：NAN  0  ""  null  undefined  false
+
+1、在条件中使用逻辑与或
+
+var foo = 10;
+
+
+function doSomething()
+
+{
+	
+console.log(false);
+
+}
+
+foo == 10 && doSomething(); // is the same thing as if (foo == 10) doSomething(); false
+foo == 5 || doSomething(); // is the same thing as if (foo != 5) doSomething(); false
+
+
+2、浮点计算的问题
+
+0.1 + 0.2 == 0.3 // false
+
+(9007199254740992 + 1) == 9007199254740993
+ //true
+
+
+(9007199254740992 + 1) == 9007199254740992
+ //true 
+
+//这跟上面的原理是一样的，因为js不适合做精确运算，大家只需要知道这一点就行。
+
+3、逗号操作符
+var a = 0;
+var b = (a++,99);
+console.log(a); // a will be equal to 1
+console.log(b); // b is equal to 99  逗号运算符返回最后的那一个数
+
+
+[]==0;     //
+true  空数组跟数值比较 []转为数值类型是0  0==0
+0=='0';    
+//true  0跟字符串比较 0转为字符串为“0”，'0'=='0'
+[]=='0';   
+//false
+ 空数组跟字符串比较  空数组转为字符串是“”    ''!='0';
+
+
+[]==false //
+true
+
+![]==false //
+true
+[] ==[] 
+//false
+   复杂类型数值判断不相等
+这个要牵涉到 JavaScript 中不同类型 == 比较的规则, 具体是由相关标准定义的.
+![] 的值是 false, 此时表达式变为 [] == false, 参照标准, 该比较变成了 [] == ToNumber(false),
+即 [] == 0. 
+
+
+   '1.2'==true;
+//false
+
+   "1"==true;//true
+   []+9;//"9"
+   {}+9;//9
+   var a={} a+9;  //"[object Object]9"
+
+根据上面的解答简单归结起来就是，非Number 转换为Number 来比较，
+对象类型转换为原始类型来处理。这个是因为{}对象字面量这个在浏览器
+中会被解析为代码块而不是对象，浏览器会尝试执行代码块，而上面并没有
+代码执行所以第一个只返回了9, 对于第二个，[]的Primitive的值会调用
+toString方式转换为空字符串,然后空字符串和9相加就是字符串"9"了。
+
+
+大家只要记得两点：
+bool值的false 和 true 对应 0和1
+数字和字符串比较，会把字符串转化为数字，再比较两者大小。
+true == "1.2"
+相当于
+1 == "1.2"
+相当于
+1 == 1.2
+结果是false
+
+
+'5'-2//3
+
+'5'-'4'//1
+
+'5' + -'2'//"5-2"
+
+'5'+ +'5'//"55"
+
+'foo'+ +'foo'//"fooNaN"
+
+只用一个空的div 不使用任何伪元素 画一个三明治导航 可以通过样式
+
+
+一. 三种数组复制方法 
+1. by slice 
+var arr = [1, 2, 3], copyArr; 
+copyArr = arr.slice(); 
+
+2. by concat 
+var arr = [1, 2, 3], copyArr; 
+copyArr = arr.concat(); 
+3. by loop 
+var arr = [1, 2, 3], copyArr = []; 
+for (var i=0, j=arr.length; i 
+
+
+
+
+一般来说，通过 innerHTML 或者 DOM 方法插入的 script 脚本都不能正常执行。
+前端开发知识点：
+HTML&CSS：
+对Web标准的理解、浏览器内核差异、兼容性、hack、CSS基本功：布局、盒子模型、选择器优先级、 HTML5、CSS3、Flexbox
+JavaScript：
+数据类型、运算、对象、Function、继承、闭包、作用域、原型链、事件、RegExp、JSON、Ajax、DOM、BOM、内存泄漏、跨域、
+异步装载、模板引擎、前端MVC、路由、模块化、Canvas、ECMAScript 6、Nodejs
+其他：
+移动端、响应式、自动化构建、HTTP、离线存储、WEB安全、优化、重构、团队协作、可维护、易用性、SEO、UED、架构、职业生涯、快速学习能力
+
+
+<!--[if lt IE 9]>
+           <div class="browserupgrade">
+                <div class="tip">"Duang"，你被鄙视了，还在用这么Low的浏览器，快去升级吧！</div>
+                <div class="tip-author"> -by AlloyTeam </div>
+                <a href=" http://browsehappy.osfipin.com/ ">点我去升级</a>
+            </div>
+            <style>.main{display:none}</style>
+        <![endif]-->
+
+如何判断一个数值为整数？ 如果这个数和1取余运算等于0，这个数就是整数  即 n%1==0;
+
+var str = "naYgniYgnehZ";
+console.log(Array.prototype.slice.call(str).reverse().join("")); //"ZhengYingYan"
+
+方法一：
+var str = "naYgniYgnehZ";
+console.log(str.split('').sort(function(a,b){return b-a}).join(''));  //"ZhengYingYan"
+注：1、.split()/.sort()/.join()分别对应上述三部曲；
+　　2、.sort(func):func规定了排序规则
+ 
+方法二：
+var str = "naYgniYgnehZ";
+console.log(str.split("").reverse().join(""); //"ZhengYingYan"
+注：1、同上；
+　　2、.reverse()是Array对象方法，用于颠倒数组中元素的顺序。
+ 
+方法三：
+var str = "naYgniYgnehZ";
+console.log(Array.prototype.slice.call(str).reverse().join("")); //"ZhengYingYan"
+注：1、.reverse()/.join()同上；
+　　2、Array.prototype.slice.call(str)：实现字符串转为数组①
+
+
+js中函数节流&函数去抖
+
+//我们先来个节流,每秒输出一次
+window.onscroll=function(){
+    if(window.onScrollTag == undefined){
+        window.onScrollTag=true;
+        console.log(new Date());
+        setTimeout(function(){
+            window.onScrollTag=undefined;
+        },1000);
+    }
+}//先触发
+window.onscroll=function(){
+    if(window.onScrollTag == undefined){
+        window.onScrollTag=setTimeout(function(){
+            window.onScrollTag=undefined;
+             console.log(new Date());
+        },1000);
+       
+    }
+}//后触发
+//从上面的代码可以看出来，我们在一个事件执行的时候就把标记改成不可用。一秒后才可以再次触发操作。
+//我们在尝试一下去抖
+window.onscroll=function(){
+    if(window.onScrollTag != undefined){
+        clearTimeout(window.onScrollTag);
+    }
+    window.onScrollTag=setTimeout(function(){
+         console.log(new Date());
+    },1000);
+}//消抖，消除抖动，感觉这个更好听
+
+
+throttle
+
+function throttle(fn, threshhold, scope) {
+  threshhold || (threshhold = 250);
+  var last,
+      timer;
+  return function () {
+    var context = scope || this;
+
+    var now = +new Date(),
+        args = arguments;
+    if (last && now - last + threshhold < 0) {
+      // hold on to it
+      clearTimeout(deferTimer);
+      timer = setTimeout(function () {
+        last = now;
+        fn.apply(context, args);
+      }, threshhold);
+    } else {
+      last = now;
+      fn.apply(context, args);
+    }
+  };
+}
+
+调用方法
+
+$('body').on('mousemove', throttle(function (event) {
+  console.log('tick');
+}, 1000));
+
+debounce
+
+function debounce(fn, delay) {
+  var timer = null;
+  return function () {
+    var context = this, args = arguments;
+    clearTimeout(timer);
+    timer = setTimeout(function () {
+      fn.apply(context, args);
+    }, delay);
+  };
+}
+
+调用方法
+
+$('input.username').keypress(debounce(function (event) {
+  // do the Ajax request
+}, 250));
+
+
+var s = sum(1)(2)(3) ....... 最后 alert(s) 出来是6  
+var s = sum(1)(2)(3)(4) ....... 最后 alert(s) 出来是10  
+问sum怎么实现？
+刚看到题目，我第一反应是sum返回的是一个function，但是没有最终实现，印象中看到过类似的原理，但是记不清了。
+ 
+后来同事说，这个是叫柯里化，
+实现方法比较巧妙：
+ 
+function sum(x){ 
+ var y = function(x){ 
+  return sum(x+y) 
+ } 
+ y.toString = y.valueOf = function(){ 
+  return x; 
+ } 
+ return y; 
+} 
+
+
+ var array=[1,[3,[4],[5,[6,7]],8],[9,[10]]];
+   var newarray=[];
+
+   function flat(array,newarray){
+      for (var i = 0; i < array.length; i++) {
+         //类型为number, 则放入到新数组中
+         if(typeof array[i]=="number"){
+            newarray.push(array[i]);
+         }else{
+         //否则, 继续分解, 判断, 放入....
+            flat(array[i],newarray);
+         }       
+        }      
+      console.log(newarray);
+   }
+   flat(array,newarray);

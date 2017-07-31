@@ -1,0 +1,542 @@
+垂直水平居中的实现方式
+
+1、绝对定位+margin：auto
+
+
+<style type="text/css">
+    .wrp {
+        background-color: #b9b9b9;
+        width: 240px;
+        height: 160px;
+    }
+    .box {
+        color: white;
+        background-color: #3e8e41;
+        width: 200px;
+        height: 120px;
+        overflow: auto;
+    }
+    .wrp1 { position: relative; }
+    .box1 {
+        margin: auto;
+        position: absolute;
+        left: 0; right: 0; top: 0; bottom: 0;
+    }
+</style>
+<div class="wrp wrp1">
+    <div class="box box1">
+        <h3>完全居中层1：</h3>
+        <h3>开发工具 【 WeX5 】： 高性能轻架构、开源免费、跨端、可视化</h3>
+    </div>
+</div>
+效果：
+
+ 
+
+实现原理：利用css定位规则，设置左右、上下方向定位为0，margin为auto，让css根据定位计算margin值，用hack的方式实现居中。居中块（绿色）的尺
+
+寸需要可控,因为css计算margin时也需要参考尺寸值，由于四周为0，所以自动计算的尺寸是与父容器一样的。无论是设置width、height或者是 max-
+
+height、max-width，都是让尺寸不会扩大到与父级一样。
+
+2、绝对定位+margin反向偏移
+
+<style type="text/css">
+ 
+.wrp2 { position: relative; }
+.box2 {
+    position: absolute;
+    top: 50%; left: 50%;
+    margin-left: -100px; /* (width + padding)/2 */
+    margin-top: -75px; /* (height + padding)/2 */
+}
+</style>
+<div class="wrp wrp2">
+ 
+<div class="box box2">
+    <h3>完全居中方案二：</h3>
+    <h3>开发工具 【 WeX5 】： 高性能轻架构、开源免费、跨端、可视化</h3>
+</div>
+</div>
+ 效果：
+
+
+
+实现原理：由于top、left偏移了父对象的50%高度宽度，所以需要利用margin反向偏移居中块的50%宽高。而margin中不能使用百分比，因为百分比是针对
+
+父对象的，所以需要手动计算定值指定margin值。这个方案需要固定尺寸值，以此来计算margin反向偏向值，所以方案2比方案1稍差！
+
+3、绝对定位+transform反向偏移
+
+
+<style type="text/css">
+ 
+.wrp3 { position: relative; }
+.box3 {
+    margin: auto;
+    position: absolute;
+    top: 50%; left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+</style>
+<div class="wrp wrp3">
+ 
+<div class="box box3">
+    <h3>完全居中方案三：</h3>
+    <h3>开发工具 【 WeX5 】： 高性能轻架构、开源免费、跨端、可视化</h3>
+</div>
+ 
+
+效果：
+
+
+
+实现原理：方案3与方案2原理一样！不同点是使用了transform来代替margin做反向偏移，由于transform的计算基准是元素本身，所以这里可以用50%来做反向偏移。这个方案也需要固定尺寸值，浏览器以此为基准来计算定位！
+
+4、display：tabel
+
+
+<style type="text/css">
+ 
+.wrp4 { display: table; }
+.subwrp4 {
+    display: table-cell;
+    vertical-align: middle;
+}
+.box4 {
+    margin: auto;
+    overflow-wrap: break-word;
+    height: auto;
+    max-height: 80%;
+    max-width: 80%;
+}
+</style>
+<div class="wrp wrp4">
+ 
+<div class="subwrp4">
+    <div class="box box4">
+        <h3>完全居中方案四：</h3>
+    </div>
+</div>
+</div>
+ 
+
+效果：
+
+
+
+实现原理：方案4是实现效果比较好的，居中块的尺寸可以做包裹性，缺点是增加了一层table-cell层来实现垂直居中。方案4的居中块可以设置 max-
+
+height、max-width，而且居中块是可以具有垂直方向的包裹性的。水平方向由于是在table-cell里面的，所以会直接显示max-width，也就是宽度趋大。
+
+5、display: inline-block
+
+
+<style type="text/css">
+ 
+.wrp5 {
+    text-align: center;
+    overflow: auto;
+}
+.box5 {
+    display: inline-block;
+    vertical-align: middle;
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 90%;
+}
+.wrp5:after {
+    content: '';
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    margin-left: -0.25em;
+    /* To offset spacing. May vary by font */
+}
+</style>
+<div class="wrp wrp5">
+ 
+<div class="box box5">
+    <h3>完全居中方案五：</h3>
+    <h3>开发工具 【 WeX5 】： 高性能轻架构、开源免费、跨端、可视化</h3>
+</div>
+</div>
+ 
+
+效果：
+
+
+
+实现原理：原理：利用inline-block的vertical-align: middle去对齐after伪元素，after伪元素的高度与父对象一样，就实现了高度方向的对齐。方案5实现效果更加好，居中块的尺寸可以做包裹性、自适应内容，兼容性也相当好。缺点是水平居中需要考虑inline-block间隔中的留白（代码换行符遗留问题。）。方案4的居中块可以设置 max-height、max-width，而且居中块是可以具有水平垂直两个方向的自适应。
+
+6、display: flex-box
+
+<style type="text/css">
+ 
+.wrp6 {
+    display: -webkit-flex;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+ 
+.box6 {
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 90%;
+}
+</style>
+<div class="wrp wrp6">
+ 
+<div class="box box6">
+    <h3>完全居中方案六：</h3>
+    <h3>开发工具 【 WeX5 】： 高性能轻架构、开源免费、跨端、可视化</h3>
+</div>
+</div>
+ 
+
+效果：
+
+
+
+实现原理： flexbox布局。此乃布局终极大法，专治各种布局定位难题！优点：能解决各种排列布局问题，实现方式符合人类认知。缺点：PC端某些旧浏览器支持度不高。
+
+
+
+
+
+
+常用布局的实现（两列布局、三列适应布局，两列等高适应布局等）
+
+两列布局：左侧定宽，右侧自适应
+方法一：利用float和负外边距
+
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+}
+ 
+.main,.sitebar {
+    font: bolder 20px/300px;
+}
+ 
+.main {
+    width: 100%;
+    float: left;
+}
+ 
+.main .content {
+    margin-left: 200px;
+    background-color: red;
+}
+ 
+.sitebar {
+    width: 200px;
+    float: left;
+    background-color: green;
+    margin-left: -100%;
+}
+  </style>
+<div class="main">
+   <div class="content">
+     右侧主体自适应区块
+   </div>
+  </div>
+  <div class="sitebar">
+    左侧定宽200px区块
+</div>
+优点：考虑了页面优化，右侧主内容区先加载，左侧后加载。
+缺点：多添加了一层div包裹。
+方法二：利用外边距
+
+<style>      
+ * {
+    margin: 0;
+    padding: 0;
+}
+ 
+.sitebar {
+    float: left;
+    width: 200px;
+    background-color: green;
+}
+ 
+.content {
+    background-color: red;
+    margin-left: 200px;
+}  
+ </style>
+<div class="sitebar">
+   左侧定宽200px区块
+  </div>
+  <div class="content">
+   右侧主体自适应区块
+</div>
+优点：代码简洁，便于理解
+缺点：不利于页面优化，右侧主内容区后加载
+方法三：利用position
+
+
+<style>       
+* {
+    margin: 0;
+    padding: 0;
+}
+ 
+.sitebar {
+    width: 200px;
+    background-color: green;
+}
+ 
+.content {
+    position: absolute;
+    left: 200px;
+    right: 0;
+    top: 0;
+    background-color: red;
+}  
+ </style>
+<div class="content">
+   右侧主体自适应区块
+  </div>
+  <div class="sitebar">
+   左侧定宽200px区块
+</div>
+优点：考虑到了页面优化，右侧内容区先加载
+缺点：目测没有
+上述三种方法兼容 IE7 以上，但在IE7下不设置高度时，会产生高度错位bug。可通过设置父元素 font-size=0 ，再分别设置 子元素 font-size解决。
+
+方法四：利用flex布局
+
+
+<style>       
+* {
+    margin: 0;
+    padding: 0;
+}
+ 
+.main {
+    display: flex;
+}
+ 
+.content {
+    flex: 1;
+    background-color: red;
+}
+ 
+.sitebar {
+    flex: 0 0 200px;
+    order: -1;
+    background-color: green;
+}           
+</style>
+<div class="main">
+   <div class="content">
+    右侧主体自适应区块
+   </div>
+   <div class="sitebar">
+    左侧定宽200px区块
+</div>
+优点：CSS3新布局方式，高大上
+缺点：仅支持 IE11+
+三列布局：左右定款，中间自适应。
+
+方法一：使用负外边距
+
+
+<style>       
+* {
+    margin: 0;
+    padding: 0;
+}
+ 
+.main,.left,.right {
+    height: 300px;
+    font: 20px/300px;
+    color: #fff;
+    text-align: center;
+}
+ 
+.main {
+    width: 100%;
+    float: left;
+}
+ 
+.main .content {
+    margin: 0 300px 0 200px;
+    background-color: black;
+}
+ 
+.left {
+    width: 200px;
+    float: left;
+    margin-left: -100%;
+    background-color: red;
+}
+ 
+.right {
+    width: 300px;
+    float: left;
+    margin-left: -300px;
+    background-color: blue;
+} 
+</style>
+<div class="main">
+   <div class="content">
+    中间主体区域宽度自适应
+   </div>
+  </div>
+  <div class="left">
+   左侧定宽200px
+  </div>
+  <div class="right">
+   右侧定宽300px
+</div>
+优点：兼容IE7+，考虑到页面优化，中间内容区先加载
+缺点：多一层div嵌套，不易理解
+方法二：使用绝对定位
+
+
+<style>
+body {
+    margin: 0px;
+}
+#left {
+    background-color: #E8F5FE;
+    border: 1px solid #A9C9E2;
+    height: 400px;
+    width: 100px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+ 
+#center {
+    background-color: #F2FDDB;
+    border: 1px solid #A5CF3D;
+    height: 400px;
+    margin-right: 102px;
+    margin-left: 102px;
+}
+ 
+#right {
+    background-color: #FFE7F4;
+    border: 1px solid #F9B3D5;
+    height: 400px;
+    width: 100px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+}
+</style>
+ <div id="center">
+   中列
+  </div>
+  <div id="left">
+   左列
+  </div>
+  <div id="right">
+   右列
+  </div>
+优点：代码结构简单，考虑到了页面优化，中间内容去先加载
+缺点：目测没有
+方法三：使用flex布局
+
+
+<style>
+.HolyGrail-body {
+    display: flex;
+    flex: 1;
+}
+ 
+.HolyGrail-content {
+    flex: 1;
+    background-color: green;
+}
+ 
+.HolyGrail-nav, .HolyGrail-ads {
+  /* 两个边栏的宽度设为12em */
+    flex: 0 0 200px;
+    background-color: blue;
+}
+ 
+.HolyGrail-nav {
+  /* 导航放到最左边 */
+    order: -1;
+    background-color: grey;
+}
+</style>
+<div class="HolyGrail-body">
+   <main class="HolyGrail-content">
+    ...
+   </main>
+   <nav class="HolyGrail-nav">
+    ...
+   </nav>
+   <aside class="HolyGrail-ads">
+    ...
+   </aside>
+  </div>
+优点：高大上
+缺点：仅支持IE11+
+两列等高布局
+利用padding-bottom的正值与margin-bottom的负值相互抵消即可，同时最外层设置overflow:hidden;即可.
+代码如下：
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+ <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>两列等高布局，利用padding-bottom的正值与margin-bottom的负值相互抵消即可</title>
+  <style>
+ 
+.main{ width:600px; margin:0 auto; overflow:hidden;}
+ 
+.left{background:red; width:300px; float:left; padding-bottom:2000px; margin-bottom:-2000px;}
+ 
+.right{background:green; width:300px;float:left;padding-bottom:2000px; margin-bottom:-2000px;}
+ 
+</style>
+ </head>
+ <body>
+  <div class="main">
+   <div class="left">
+    <p>we are good friend</p>
+   </div>
+   <div class="right">
+    <p>we are good friend</p>
+    <p>we are good friend</p>
+    <p>we are good friend</p>
+    <p>we are good friend</p>
+   </div>
+  </div> 
+ </body>
+</html>
+
+
+
+解决chrome浏览器不能设置大小为0的字体问题
+.space {
+    font-size: 0;
+    -webkit-text-size-adjust:none;
+
+}
+
+

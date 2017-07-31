@@ -1,0 +1,269 @@
+null表示"没有对象"，即该处不应该有值。典型用法是：
+（1） 作为函数的参数，表示该函数的参数不是对象。
+（2） 作为对象原型链的终点。
+
+Object.getPrototypeOf(Object.prototype)
+// null
+
+undefined表示"缺少值"，就是此处应该有一个值，但是还没有定义。典型用法是：
+（1）变量被声明了，但没有赋值时，就等于undefined。
+（2) 调用函数时，应该提供的参数没有提供，该参数等于undefined。
+（3）对象没有赋值的属性，该属性的值为undefined。
+（4）函数没有返回值时，默认返回undefined。
+
+var i;
+i // undefined
+
+function f(x){console.log(x)}
+f() // undefined
+
+var  o = new Object();
+o.p // undefined
+
+var x = f();
+x // undefined
+
+
+
+
+
+
+
+<!DOCTYPE html>  
+<html>  
+    <head>  
+        <meta charset="UTF-8">  
+        <title>双向数据绑定原理(三种实现方式)</title>  
+    </head>  
+    <body>  
+        <input type="text" id="a" />  
+        <span id="b"></span>  
+        <!--  
+              
+            //脏检查  
+            我们说Angularjs（这里特指AngularJS 1.x.x版本，不代表AngularJS 2.x.x版本）双向数据绑定的技术实现是脏检查，大致的原理就是，  
+            Angularjs内部会维护一个序列，将所有需要监控的属性放在这个序列中，当发生某些特定事件时（注意，  
+            这里并不是定时的而是由某些特殊事件触发的），Angularjs会调用 $digest 方法，这个方法内部做的逻辑就是遍历所有的watcher，  
+            对被监控的属性做对比，对比其在方法调用前后属性值有没有发生变化，如果发生变化，则调用对应的handler。  
+            网上有许多剖析Angularjs双向数据绑定实现原理的文章，比如 这篇 ，再比如 这篇 ，等等。  
+            这种方式的缺点很明显，遍历轮训watcher是非常消耗性能的，特别是当单页的监控数量达到一个数量级的时候。  
+              
+            //观察机制  
+            博主之前有一篇转载翻译的文章， Object.observe()带来的数据绑定变革 ，说的就是使用ECMAScript7中的 Object.observe 方法对对象  
+            （或者其属性）进行监控观察，一旦其发生变化时，将会执行相应的handler。  
+            这是目前监控属性数据变更最完美的一种方法，语言（浏览器）原生支持，没有什么比这个更好了。唯一的遗憾就是目前支持广度还不行，有待全面推广。  
+              
+            //封装属性访问器  
+            国产mvvm框架vue.js实现数据双向绑定的原理就是属性访问器。  
+            它使用了ECMAScript5.1（ECMA-262）中定义的标准属性 Object.defineProperty 方法。针对国内行情，  
+            部分还不支持 Object.defineProperty 低级浏览器采用VBScript作了完美兼容，不像其他的mvvm框架已经逐渐放弃对低端浏览器的支持。  
+              
+        -->  
+        <script>  
+          
+            //封装属性访问器  
+            //Object.defineProperty(obj, prop, descriptor)  
+            //obj ，待修改的对象  
+            //prop ，带修改的属性名称  
+            //descriptor ，待修改属性的相关描述  
+            var obj = {};  
+            Object.defineProperty(obj,'a',{  
+                set:function(newVal){  
+                    document.getElementById('a').value = newVal;  
+                    document.getElementById('b').innerHTML = newVal;  
+                }  
+            });  
+              
+            document.addEventListener('keyup',function(e){  
+                obj.a = e.target.value;  
+            });  
+              
+              
+        </script>  
+          
+    </body>  
+</html>  
+
+
+
+W3C标准是一些列标准的集合！在各个企业的基础上做一定的整合，形成一套标准集，便于推广和使用！
+根据网页主要由三部分组成：结构（Structure）、表现（Presentation）和行为（Behavior）。
+对应的标准也分三方面：结构化标准语言主要包括XHTML和XML，表现标准语言主要包括CSS，
+行为标准主要包括对象模型（如W3C DOM）、ECMAScript等。在具体的XHTML标准（如属性值加引号，不允许单标记，大小写等等比较多）！
+语法上比，我们目前使用的html标记较为严格！更为具体的信息楼上可以参见百度百科，XHTML等相关术语！也可参见，W3C发布的使用文档！
+
+
+当输入框在最底部的时候，弹起的虚拟键盘会把输入框挡住。
+于是我发给他一个 API：Element.scrollIntoViewIfNeeded(opt_center)，故名思意，就是在需要的时候将元素滚动到可视区域。
+
+
+
+
+
+
+filter
+
+ES5 提供了 filter 方法，我们可以用来简化外层循环：
+
+比如使用 indexOf 的方法：
+
+var array = [1, 2, 1, 1, '1'];
+
+function unique(array) {
+    var res = array.filter(function(item, index, array){
+        return array.indexOf(item) === index;
+    })
+    return res;
+}
+
+console.log(unique(array));
+排序去重的方法：
+
+var array = [1, 2, 1, 1, '1'];
+
+function unique(array) {
+    return array.concat().sort().filter(function(item, index, array){
+        return !index || item !== array[index - 1]
+    })
+}
+
+console.log(unique(array));
+Object 键值对
+
+去重的方法众多，尽管我们已经跟着 underscore 写了一个 unqiue API，但是让我们看看其他的方法拓展下视野：
+
+这种方法是利用一个空的 Object 对象，我们把数组的值存成 Object 的 key 值，比如 Object[value1] = true，在判断另一个值的时候，如果 Object[value2]存在的话，就说明该值是重复的。示例代码如下：
+
+var array = [1, 2, 1, 1, '1'];
+
+function unique(array) {
+    var obj = {};
+    return array.filter(function(item, index, array){
+        return obj.hasOwnProperty(item) ? false : (obj[item] = true)
+    })
+}
+
+console.log(unique(array)); // [1, 2]
+我们可以发现，是有问题的，因为 1 和 '1' 是不同的，但是这种方法会判断为同一个值，这是因为对象的键值只能是字符串，所以我们可以使用 typeof item + item 拼成字符串作为 key 值来避免这个问题：
+
+var array = [1, 2, 1, 1, '1'];
+
+function unique(array) {
+    var obj = {};
+    return array.filter(function(item, index, array){
+        return obj.hasOwnProperty(typeof item + item) ? false : (obj[typeof item + item] = true)
+    })
+}
+
+console.log(unique(array)); // [1, 2, "1"]
+ES6
+
+随着 ES6 的到来，去重的方法又有了进展，比如我们可以使用 Set 和 Map 数据结构，以 Set 为例，ES6 提供了新的数据结构 Set。它类似于数组，但是成员的值都是唯一的，没有重复的值。
+
+是不是感觉就像是为去重而准备的？让我们来写一版：
+
+var array = [1, 2, 1, 1, '1'];
+
+function unique(array) {
+   return Array.from(new Set(array));
+}
+
+console.log(unique(array)); // [1, 2, "1"]
+甚至可以再简化下：
+
+function unique(array) {
+    return [...new Set(array)];
+}
+还可以再简化下：
+
+var unique = (a) => [...new Set(a)]
+此外，如果用 Map 的话：
+
+function unique (arr) {
+    const seen = new Map()
+    return arr.filter((a) => !seen.has(a) && seen.set(a, 1))
+}
+JavaScript 的进化
+
+我们可以看到，去重方法从原始的 14 行代码到 ES6 的 1 行代码，其实也说明了 JavaScript 这门语言在不停的进步，相信以后的开发也会越来越高效。
+
+
+
+一、实现异步的方式
+
+1.setTimeout 
+2.setImmediate 
+3.requestAnimationFrame 
+4.监听new Image加载状态 
+5.监听script加载状态 
+6.Message 
+7.Promise 
+
+
+1.defer标签 只支持IE
+    defer属性的定义和用法： 属性规定是否对脚本执行进行延迟，直到页面加载为止。有的 javascript 脚本 document.write 方法来创建当前的文档内容，其他脚本就不一定是了。
+如果您的脚本不会改变文档的内容，可将 defer 属性加入到 <script> 标签中，以便加快处理文档的速度。因为浏览器知道它将能够安全地读取文档的剩余部分而不用执行脚本，它将推迟对脚本的解释，直到文档已经显示给用户为止。
+<script type="text/javascript" defer="defer"> 
+alert(document.getElementById("p1").firstChild.nodeValue); 
+</script> 
+
+2.async（async 属性是 HTML5 中的新属性。）
+
+async 属性规定一旦脚本可用，则会异步执行。
+注释：async 属性仅适用于外部脚本（只有在使用 src 属性时）。
+注释：有多种执行外部脚本的方法：
+如果 async="async"：脚本相对于页面的其余部分异步地执行（当页面继续进行解析时，脚本将被执行）
+如果不使用 async 且 defer="defer"：脚本将在页面完成解析时执行
+如果既不使用 async 也不使用 defer：在浏览器继续解析页面之前，立即读取并执行脚本
+<script type="text/javascript" src="demo_async.js" async="async"></script> 
+
+3.创建script，插入到DOM中，加载完毕后callBack；
+function loadScript(url, callback){
+var script=document.creatElment("script");
+script.type="text/javascript";
+if(script.readyState){  ie
+     script.onReadyState=function(){
+       if(script.readyState ="load" || script.readyState = "complete"){
+          script.onReadyState=null;
+          callback();
+       }else{
+       script.onload=function(){
+          callback();
+}
+}
+}
+  }
+     script.src=url;
+document.body.appendChild(script);
+}
+
+
+function param(data){
+	let url='';
+	for(var k in data){
+		let value=data[k]!==undefined? data[k]:'';
+		url+=`&${k}=${encodeURIComponent(value)}`
+	}
+	return url?url.substring(1) :'';
+}
+
+export default function jsonp(url,data,option){
+
+	url+=(url.indexOf('?')<0?'?':'&')+param(data);
+
+	return new Promise((resolve,reject)=>{
+
+		originJSON(url,option,(err,data)=>{
+			if(!err){
+				resolve(data)
+			}else{
+				reject(err)
+			}
+		})
+	})
+}
+
+
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
